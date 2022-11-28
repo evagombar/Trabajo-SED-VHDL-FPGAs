@@ -79,6 +79,4 @@ maquina: process(ESTADO_ACT,bdentro,bfuera,puerta)
 
 end process maquina;
 
-
-
 end Behavioral;
