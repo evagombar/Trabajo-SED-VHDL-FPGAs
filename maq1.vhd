@@ -1,12 +1,10 @@
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 
 entity maq1 is
     port(
-    bfuera: in std_logic_vector(3 downto 0);
+    	bfuera: in std_logic_vector(3 downto 0);
 	bdentro: in std_logic_vector (3 downto 0);
 	piso:out std_logic_vector(3 downto 0);
 	puerta: in std_logic_vector (1 downto 0); --10=pabierta, 01=pcerrada
@@ -42,7 +40,7 @@ maquina: process(ESTADO_ACT,bdentro,bfuera,puerta)
 		when PARADA=>
 		    motor<="00";
 			if(bfuera=piso or bdentro=piso) then
-				ESTADO_SIG<=ABRIR; --ascensor está en el piso que quiero
+				ESTADO_SIG<=ABRIR; --ascensor estÃ¡ en el piso que quiero
 
 			elsif(bfuera/="0000" or bdentro/="0000" ) then
 				ESTADO_SIG<=MOV; --ascensor se mueve al piso del boton pulsado
@@ -70,7 +68,7 @@ maquina: process(ESTADO_ACT,bdentro,bfuera,puerta)
 
 		when CERRAR=>
 		    motor<="00";
-			if(bdentro="0000" and puerta="01")then --bdentro='0000' es que no se ha pulsado ninguna botón
+			if(bdentro="0000" and puerta="01")then --bdentro='0000' es que no se ha pulsado ninguna botÃ³n
 				ESTADO_SIG<=PARADA;
 			elsif(bdentro/=piso and puerta="01") then
 				ESTADO_SIG<=MOV;
