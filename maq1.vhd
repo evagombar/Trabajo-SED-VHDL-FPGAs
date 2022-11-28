@@ -6,7 +6,7 @@ entity maq1 is
     port(
     	bfuera: in std_logic_vector(3 downto 0);
 	bdentro: in std_logic_vector (3 downto 0);
-	piso:out std_logic_vector(3 downto 0);
+	piso:inout std_logic_vector(3 downto 0);
 	puerta: in std_logic_vector (1 downto 0); --10=pabierta, 01=pcerrada
 	presencia: in std_logic;
 
