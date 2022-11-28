@@ -51,11 +51,16 @@ maquina: process(ESTADO_ACT,bdentro,bfuera,puerta)
 
 
 		when MOV=>
---!!!!!!!!!!!!!!!!motor subiendo o bajando!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			if(bfuera=piso or bdentro=piso) then
-				ESTADO_SIG<=PARADA; --ascensor ha llegado a destino
+			if(bfuera>piso or bdentro>piso) then
+				motor<="10"; --motor subiendo
+				ESTADO_SIG<=MOV;
+			elsif(bfuera<piso or bdentro<piso) then
+				motor<="01"; --motor bajando
+				ESTADO_SIG<=MOV;
 			else
-				ESTADO_SIG<=MOV; --ascensor sigue en movimiento
+				motor<="00"; --motor en parada
+				ESTADO_SIG<=PARADA;
+			
 			end if;
 
 		when ABRIR=>
