@@ -68,7 +68,7 @@ maquina: process(ESTADO_ACT,bdentro,bfuera,pabierta_pcerrada, presencia,piso)
 	case ESTADO_ACT is
 		when PARADA=>
 			if(bfuera=piso or bdentro=piso) then
-				ESTADO_SIG<=ABRIR; --ascensor está en el piso que quiero
+				ESTADO_SIG<=ABRIR; --ascensor estÃ¡ en el piso que quiero
 
 			elsif(bfuera/="0000" or bdentro/="0000" ) then
 				ESTADO_SIG<=MOV; --ascensor se mueve al piso del boton pulsado
@@ -93,10 +93,12 @@ maquina: process(ESTADO_ACT,bdentro,bfuera,pabierta_pcerrada, presencia,piso)
 			end if;
 
 		when CERRAR=>
-			if(bdentro="0000" and pabierta_pcerrada="01")then --bdentro='0000' es que no se ha pulsado ningun botón
+			if(bdentro="0000" and pabierta_pcerrada="01")then --bdentro='0000' es que no se ha pulsado ningun botÃ³n
 				ESTADO_SIG<=PARADA;
 			elsif(bdentro/=piso and pabierta_pcerrada="01") then
 				ESTADO_SIG<=MOV;
+			elsif(presencia='1' and pabierta_pcerrada/="01") then --la puerta no se ha cerrado completamente y nota presencia
+				ESTADO_SIG<=ABRIR;
 			else
 				ESTADO_SIG<=CERRAR;
 			end if;
