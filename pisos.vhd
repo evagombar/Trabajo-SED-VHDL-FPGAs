@@ -50,7 +50,6 @@ begin
                 when "0010" => piso<= "0010";
                 when "0100" => piso<= "0100";
                 when "1000" => piso<= "1000";
-                when others => piso<= "0000";
             end case;
         end if;
      end process movimiento_pisos;
