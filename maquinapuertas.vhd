@@ -79,7 +79,7 @@ maquina: process(ESTADO_ACT,motor,pabierta_pcerrada,presencia,bdentro,bfuera)
         ESTADO_SIG<=ESPERABOTON;
       end if;
 	end case;
-
-end process maquina;
+		
+ end process maquina;
 
 end Behavioral;
