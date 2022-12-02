@@ -42,7 +42,7 @@ end pisos;
 
 architecture Behavioral of pisos is
 begin
-    movimiento_pisos:process(clk)
+    piso_deseado:process(clk)
     begin
         if rising_edge(clk) then
             case bdentro or bfuera is
@@ -52,6 +52,6 @@ begin
                 when "1000" => piso<= "100";
             end case;
         end if;
-     end process movimiento_pisos;
+     end process piso_deseado;
 
 end Behavioral;
