@@ -15,7 +15,8 @@ entity pisoactual is
         clk:in std_logic;
         reset: in std_logic;
         piso:in std_logic_vector(2 downto 0); --piso donde quiero ir (viene de bloque pisos)->binario
-        actual: out std_logic_vector(2 downto 0) --piso donde se encuentra el ascensor->binario
+        actual: out std_logic_vector(2 downto 0); --piso donde se encuentra el ascensor->binario
+        motor: out std_logic_vector (1 downto 0) --movimiento del ascensor: "10"=subiendo, "01"=bajando, "00"=parada
     );
 end pisoactual;
 
@@ -29,11 +30,14 @@ begin
         if rising_edge(clk) then
            if piso>p_act and piso_act<"100" then --puede subir solo hasta el piso 4
              p_act<=p_act+1;
+             motor<="10"; --motor subiendo
           
           elsif piso<p_act and piso_act>"001" then --puede bajar solo hasta el piso 1
              p_act<=p_act-1;
+             motor <="01"; --motor bajando
           else 
-            p_act<=piso;
+            p_act<=piso; 
+            motor<="00"; --motor parado
             
           end if;
         end if;
