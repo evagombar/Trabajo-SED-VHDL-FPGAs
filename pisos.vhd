@@ -36,7 +36,7 @@ entity pisos is
         clk:in std_logic;
         bdentro:in std_logic_vector(3 downto 0);
         bfuera:in std_logic_vector(3 downto 0);
-        piso:inout std_logic_vector(3 downto 0)
+        piso:out std_logic_vector(3 downto 0) --piso donde quiero ir
     );
 end pisos;
 
