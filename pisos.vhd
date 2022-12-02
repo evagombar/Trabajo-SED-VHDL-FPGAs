@@ -36,7 +36,7 @@ entity pisos is
         clk:in std_logic;
         bdentro:in std_logic_vector(3 downto 0);
         bfuera:in std_logic_vector(3 downto 0);
-        piso:out std_logic_vector(3 downto 0) --piso donde quiero ir
+        piso:out std_logic_vector(2 downto 0) --piso donde quiero ir
     );
 end pisos;
 
@@ -46,10 +46,10 @@ begin
     begin
         if rising_edge(clk) then
             case bdentro or bfuera is
-                when "0001" => piso<= "0001";
-                when "0010" => piso<= "0010";
-                when "0100" => piso<= "0100";
-                when "1000" => piso<= "1000";
+                when "0001" => piso<= "001";
+                when "0010" => piso<= "010";
+                when "0100" => piso<= "011";
+                when "1000" => piso<= "100";
             end case;
         end if;
      end process movimiento_pisos;
