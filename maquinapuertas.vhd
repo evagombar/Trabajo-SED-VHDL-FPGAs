@@ -13,7 +13,8 @@ entity maquinapuertas is
      motorpuertas: out std_logic_vector(1 downto 0); --10=abriendo puertas, 01=cerrando puertas,00=parada de puertas
 
 	   reset:in std_logic;
-	   clk:in std_logic   
+	   clk1:in std_logic; --reloj para pasar de estado
+	    clk2:in std_logic --reloj espera de seguridad de cerrar puertas
 );
 	
 end maquinapuertas;
@@ -24,16 +25,16 @@ architecture Behavioral of maquinapuertas is
 
 begin
 
-clock: process(reset,clk)
+clock: process(reset,clk1)
 	begin
 		if(reset='1') then
 			ESTADO_ACT<=PARADA;
-		elsif (rising_edge(clk)) then
+		elsif (rising_edge(clk1)) then
 			ESTADO_ACT<=ESTADO_SIG;
 		end if;
 end process clock;
 
-maquina: process(ESTADO_ACT,motor,pabierta_pcerrada,presencia,bdentro,bfuera)
+maquina: process(ESTADO_ACT,motor,pabierta_pcerrada,presencia,bdentro,bfuera,clk2)
 	begin
 	  case ESTADO_ACT is
 		  when PARADA=>
@@ -55,7 +56,7 @@ maquina: process(ESTADO_ACT,motor,pabierta_pcerrada,presencia,bdentro,bfuera)
 
 		  when PAUSASEGURIDAD=>
       motorpuertas<="00";
-			if(presencia='0' and TEMP1)then --puerta esta abierta y no hay presencia
+			if(presencia='0' and rising_edge(clk2))then --puerta esta abierta, no hay presencia y ha pasado el tiempo de seguridad
 				ESTADO_SIG<=CERRANDO; --se cierran las puertas
 			else
 				ESTADO_SIG<=ABRIENDO;
