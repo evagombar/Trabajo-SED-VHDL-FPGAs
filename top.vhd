@@ -133,4 +133,4 @@ begin
 			clk=>frec3	
 		);
 
-end Behavioral;
+end Structural;
