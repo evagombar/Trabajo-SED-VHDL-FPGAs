@@ -11,7 +11,7 @@ entity clk_divider is
     );            
     Port ( 
         clock : IN STD_LOGIC;
-        reset_n : IN STD_LOGIC;
+        reset : IN STD_LOGIC;
         clk : OUT STD_LOGIC
     );
 end clk_divider;
@@ -21,11 +21,11 @@ SIGNAL clk_signal: STD_LOGIC;
 
 begin
 
-    process (reset_n, clock)
+    process (reset, clock)
     variable count: integer;
     
     begin
-    if(reset_n='0')   then
+    if(reset='1')   then
         count := 0;
         clk_signal<='0';
     elsif rising_edge(clock)  then
