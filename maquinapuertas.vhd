@@ -1,5 +1,3 @@
-  --mirar si hay que asignar un estado inicial
---HACER TEMPORIZADOR TEMP1
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -39,7 +37,7 @@ maquina: process(ESTADO_ACT,motor,pabierta_pcerrada,presencia,bdentro,bfuera,clk
 	  case ESTADO_ACT is
 		  when PARADA=>
         motorpuertas<="00";
-			  if(pabierta_cerrada="01" and motor="00") then
+			  if(pabierta_pcerrada="01" and motor="00") then
 				  ESTADO_SIG<=ABRIENDO; --apertura de puertas
 			  else
 				ESTADO_SIG<=PARADA; 
@@ -48,7 +46,7 @@ maquina: process(ESTADO_ACT,motor,pabierta_pcerrada,presencia,bdentro,bfuera,clk
 
 		  when ABRIENDO=>
         motorpuertas<="10";
-		    if(pabierta_cerrada="10") then
+		    if(pabierta_pcerrada="10") then
 				  ESTADO_SIG<=PAUSASEGURIDAD; --ascensor ha llegado a destino
 			  else
 				  ESTADO_SIG<=ABRIENDO; --ascensor sigue en movimiento
@@ -59,11 +57,11 @@ maquina: process(ESTADO_ACT,motor,pabierta_pcerrada,presencia,bdentro,bfuera,clk
 			if(presencia='0' and rising_edge(clk2))then --puerta esta abierta, no hay presencia y ha pasado el tiempo de seguridad
 				ESTADO_SIG<=CERRANDO; --se cierran las puertas
 			else
-				ESTADO_SIG<=ABRIENDO;
+				ESTADO_SIG<=PAUSASEGURIDAD;
 			end if;
 
 		  when CERRANDO=>
-      motorpuertas<="01";
+            motorpuertas<="01";
 			if(presencia='1' and pabierta_pcerrada/="01")then --está cerrando y nota presencia
 				ESTADO_SIG<=ABRIENDO;
 			elsif(pabierta_pcerrada="01") then
