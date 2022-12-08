@@ -1,5 +1,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use ieee.std_logic_arith.ALL;
+use ieee.std_logic_unsigned.ALL;
+
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -28,11 +31,11 @@ begin
     begin
       if reset='0' then
         if rising_edge(clk) then
-           if piso>p_act and piso_act<"100" then --puede subir solo hasta el piso 4
+           if piso>p_act and p_act<"100" then --puede subir solo hasta el piso 4
              p_act<=p_act+1;
              motor<="10"; --motor subiendo
           
-          elsif piso<p_act and piso_act>"001" then --puede bajar solo hasta el piso 1
+          elsif piso<p_act and p_act>"001" then --puede bajar solo hasta el piso 1
              p_act<=p_act-1;
              motor <="01"; --motor bajando
           else 
