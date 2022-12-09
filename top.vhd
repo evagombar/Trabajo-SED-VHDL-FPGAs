@@ -49,19 +49,20 @@ COMPONENT clockdivider
 
 END COMPONENT;
 
-COMPONENT maquinapuertas
+COMPONENT ascensor
 	PORT(
 		motor: in std_logic_vector(1 downto 0);
 		presencia: in std_logic;
 		pabierta_pcerrada: in std_logic_vector(1 downto 0);
 		bdentro, bfuera: in std_logic_vector(3 downto 0);
+		piso:out std_logic_vector(2 downto 0);
 		motorpuertas: out std_logic_vector(1 downto 0);
-		reset,clk1,clk2: in std_logic	
+		reset,clk,clk1,clk2: in std_logic	
 	);	
 	
 END COMPONENT;
 	
-COMPONENT pisoactual
+COMPONENT control_ascensor
 	PORT(
 		clk,reset:in std_logic;
 		piso:in std_logic_vector (2 downto 0);
