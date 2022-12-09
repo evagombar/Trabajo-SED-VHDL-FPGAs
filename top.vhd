@@ -71,15 +71,7 @@ COMPONENT control_ascensor
 	);
 END COMPONENT;
 	
-COMPONENT pisos
-	PORT(
-		piso:out std_logic_vector (2 downto 0);
-		bdentro, bfuera: in std_logic_vector(3 downto 0);
-		clk: in std_logic	
-	);
-END COMPONENT;
 	
-
 begin
 	clock1:clockdivider 
 		GENERIC MAP (frecuencia=>150000000 ) --150MHz
@@ -104,20 +96,22 @@ begin
         		reset=>reset,
        			 clk=>frec3
         	);
-	mpuertas:maquinapuertas
+	ascensor1:ascensor
 		PORT MAP(
 			motor=> motor,
 			presencia=> presencia,
 			pabierta_pcerrada=> pabierta_pcerrada,
 			bdentro=>bdentro, 
 			bfuera=>bfuera,
+			piso=>piso,
 			motorpuertas=> puerta_motor,
 			reset=> reset,
 			clk1=>frec1,
-			clk2=>frec2
+			clk2=>frec2,
+			clk=>frec3
 		);
 	
-	pactual:pisoactual
+	c_ascensor:control_ascensor
 		PORT MAP(
 			clk=> frec3,
 			reset=> reset,
@@ -126,12 +120,4 @@ begin
 			motor=>motor --motor del ascensor
 		);
 		
-	pisos1:pisos
-		PORT MAP (
-			piso=>piso,
-			bdentro=>bdentro,
-			bfuera=>bfuera,
-			clk=>frec3	
-		);
-
 end Structural;
