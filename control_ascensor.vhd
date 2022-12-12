@@ -13,7 +13,7 @@ use ieee.std_logic_unsigned.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity pisoactual is
+entity control_ascensor is
     port(
         clk:in std_logic;
         reset: in std_logic;
@@ -21,9 +21,9 @@ entity pisoactual is
         actual: out std_logic_vector(2 downto 0); --piso donde se encuentra el ascensor->binario
         motor: out std_logic_vector (1 downto 0) --movimiento del ascensor: "10"=subiendo, "01"=bajando, "00"=parada
     );
-end pisoactual;
+end control_ascensor;
 
-architecture Behavioral of pisoactual is
+architecture Behavioral of control_ascensor is
   signal p_act: std_logic_vector (2 downto 0):="001"; --asignación del piso cero por defecto
 
 begin
