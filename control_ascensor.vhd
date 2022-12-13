@@ -16,7 +16,7 @@ use ieee.std_logic_unsigned.ALL;
 entity control_ascensor is
     port(
         clk:in std_logic;
-        reset: in std_logic;
+        reset_n: in std_logic;
         piso:in std_logic_vector(2 downto 0); --piso donde quiero ir (viene de bloque pisos)->binario
         actual: out std_logic_vector(2 downto 0); --piso donde se encuentra el ascensor->binario
         motor: out std_logic_vector (1 downto 0) --movimiento del ascensor: "10"=subiendo, "01"=bajando, "00"=parada
@@ -27,9 +27,9 @@ architecture Behavioral of control_ascensor is
   signal p_act: std_logic_vector (2 downto 0):="001"; --asignación del piso cero por defecto
 
 begin
-    valoracion_piso:process(clk)
+    valoracion_piso:process(clk,reset_n)
     begin
-      if reset='0' then
+      if reset_n='1' then
         if rising_edge(clk) then
            if piso>p_act and piso/="000" and p_act<"100" then --puede subir solo hasta el piso 4
              p_act<=p_act+1;
