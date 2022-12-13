@@ -11,7 +11,7 @@ entity ascensor is
            motorpuertas: out std_logic_vector(1 downto 0); --10=abriendo puertas, 01=cerrando puertas,00=parada de puertas
 	   piso:out std_logic_vector(2 downto 0);--piso al que quiero ir 
 
-	   reset:in std_logic;
+	   reset_n:in std_logic;
 	   clk:in std_logic;--reloj para determinar el piso al que quiero ir
 	   clk1:in std_logic; --reloj para pasar de estado
 	   clk2:in std_logic --reloj espera de seguridad de cerrar puertas
@@ -25,9 +25,9 @@ architecture Behavioral of ascensor is
 
 begin
 
-clock: process(reset,clk1)
+clock: process(reset_n,clk1)
 	begin
-		if(reset='1') then
+		if(reset_n='1') then
 			ESTADO_ACT<=PARADA;
 		elsif (rising_edge(clk1)) then
 			ESTADO_ACT<=ESTADO_SIG;
