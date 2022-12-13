@@ -23,7 +23,7 @@ entity top is
        puerta_motor: out std_logic_vector (1 downto 0); --leds
        motor: out std_logic_vector (1 downto 0);--leds (motor de ascensor)
 
-       reset:in std_logic;
+       reset_n:in std_logic;
        clk:in std_logic --clk general del programa
 	    
     );
@@ -43,7 +43,7 @@ COMPONENT clockdivider
     GENERIC (frecuencia: integer := 50000000 );
     PORT ( 
         clock: in std_logic;
-        reset: in std_logic;
+        reset_n: in std_logic;
         clk: out std_logic
         );
 
@@ -57,14 +57,14 @@ COMPONENT ascensor
 		bdentro, bfuera: in std_logic_vector(3 downto 0);
 		piso:out std_logic_vector(2 downto 0);
 		motorpuertas: out std_logic_vector(1 downto 0);
-		reset,clk,clk1,clk2: in std_logic	
+		reset_n,clk,clk1,clk2: in std_logic	
 	);	
 	
 END COMPONENT;
 	
 COMPONENT control_ascensor
 	PORT(
-		clk,reset:in std_logic;
+		clk,reset_n:in std_logic;
 		piso:in std_logic_vector (2 downto 0);
 		actual: out std_logic_vector (2 downto 0);
 		motor: out std_logic_vector (1 downto 0)	
@@ -77,7 +77,7 @@ begin
 		GENERIC MAP (frecuencia=>150000000 ) --150MHz
    		PORT MAP ( 
         		clock=>clk,
-        		reset=>reset,
+        		reset_n=>reset_n,
        			 clk=>frec1
         	);
 		
@@ -85,7 +85,7 @@ begin
 		GENERIC MAP (frecuencia=>100000000 ) --100MHz
    		PORT MAP ( 
         		clock=>clk,
-        		reset=>reset,
+        		reset_n=>reset_n,
        			 clk=>frec2
         	);
 		
@@ -93,7 +93,7 @@ begin
 		GENERIC MAP (frecuencia=>100000 ) --100KHz
    		PORT MAP ( 
         		clock=>clk,
-        		reset=>reset,
+        		reset_n=>reset_n,
        			 clk=>frec3
         	);
 	ascensor1:ascensor
@@ -105,7 +105,7 @@ begin
 			bfuera=>bfuera,
 			piso=>piso,
 			motorpuertas=> puerta_motor,
-			reset=> reset,
+			reset_n=> reset_n,
 			clk1=>frec1,
 			clk2=>frec2,
 			clk=>frec3
@@ -114,7 +114,7 @@ begin
 	c_ascensor:control_ascensor
 		PORT MAP(
 			clk=> frec3,
-			reset=> reset,
+			reset_n=> reset_n,
 			piso=>piso,
 			actual=>pisoactual,
 			motor=>motor --motor del ascensor
