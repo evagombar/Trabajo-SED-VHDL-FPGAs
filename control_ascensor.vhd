@@ -25,7 +25,7 @@ architecture Behavioral of control_ascensor is
   type estados is (PARADA,ABRIENDO,CERRANDO,PAUSASEGURIDAD); --valora puertas
   signal ESTADO_ACT,ESTADO_SIG: estados;
   
-  type estadosmotor is (STOP,SUBE,BAJA); --valora motor
+  type estadosmotor is (PARADAM,SUBE,BAJA); --valora motor
   signal ESTADO_ACT_M,ESTADO_SIG_M: estadosmotor;
 
 
@@ -35,8 +35,8 @@ begin
     
 		begin
           if(reset_n='0') then
-
-              ESTADO_ACT_M<=STOP;
+	      ESTADO_ACT<=PARADA;
+              ESTADO_ACT_M<=PARADAM;
               
           elsif (rising_edge(clk2)) then
               ESTADO_ACT<=ESTADO_SIG;
@@ -94,21 +94,21 @@ begin
  
  	begin
     	case ESTADO_ACT_M is
-        	when STOP=>
+        	when PARADAM=>
             	motor<="00";
                 if(actual< piso) then
                 	ESTADO_SIG_M<=SUBE;
                 elsif(actual>piso) then
                 	ESTADO_SIG_M<=BAJA;
                 else
-                	ESTADO_SIG_M<=STOP;
+                	ESTADO_SIG_M<=PARADAM;
                     
              	end if;
                 
            	when SUBE=>
             	motor<="10";
                 if(actual= piso) then
-                	ESTADO_SIG_M<=STOP;
+                	ESTADO_SIG_M<=PARADAM;
                 else
                 	ESTADO_SIG_M<=SUBE;
                     
@@ -118,7 +118,7 @@ begin
           	when BAJA=>
             	motor<="01";
                 if(actual= piso) then
-                	ESTADO_SIG_M<=STOP;
+                	ESTADO_SIG_M<=PARADAM;
                 else
                 	ESTADO_SIG_M<=BAJA;
                     
