@@ -4,52 +4,128 @@ use ieee.std_logic_arith.ALL;
 use ieee.std_logic_unsigned.ALL;
 
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity control_ascensor is
     port(
-        clk:in std_logic;
+        clk1:in std_logic; --cierre de puertas
+        clk2:in std_logic; --maquina de estados
         reset_n: in std_logic;
         piso:in std_logic_vector(2 downto 0); --piso donde quiero ir (viene de bloque pisos)->binario
-        actual: out std_logic_vector(2 downto 0); --piso donde se encuentra el ascensor->binario
+        actual: in std_logic_vector(2 downto 0); --piso donde se encuentra el ascensor->binario
+        presencia:in std_logic;
+        pabierta_pcerrada: in std_logic_vector(1 downto 0); --sensor detecta puerta abierta 10, o puerta cerrada 01
+        
+        motorpuertas: out std_logic_vector(1 downto 0); --10=abriendo puertas, 01=cerrando puertas,00=parada de puertas
         motor: out std_logic_vector (1 downto 0) --movimiento del ascensor: "10"=subiendo, "01"=bajando, "00"=parada
     );
 end control_ascensor;
 
 architecture Behavioral of control_ascensor is
-  signal p_act: std_logic_vector (2 downto 0):="001"; --asignación del piso cero por defecto
+
+  type estados is (PARADA,ABRIENDO,CERRANDO,PAUSASEGURIDAD); --valora puertas
+  signal ESTADO_ACT,ESTADO_SIG: estados;
+  
+  type estadosmotor is (STOP,SUBE,BAJA); --valora motor
+  signal ESTADO_ACT_M,ESTADO_SIG_M: estadosmotor;
+
 
 begin
-    valoracion_piso:process(clk,reset_n)
-    begin
-      if reset_n='1' then
-        if rising_edge(clk) then
-           if piso>p_act and piso/="000" and p_act<"100" then --puede subir solo hasta el piso 4
-             p_act<=p_act+1;
-             motor<="10"; --motor subiendo
-          
-          elsif piso<p_act and piso/="000" and p_act>"001" then --puede bajar solo hasta el piso 1
-             p_act<=p_act-1;
-             motor <="01"; --motor bajando
-          else 
-            p_act<=piso; 
-            motor<="00"; --motor parado
-            
+
+	clock: process(reset_n,clk2)
+    
+		begin
+          if(reset_n='0') then
+
+              ESTADO_ACT_M<=STOP;
+              
+          elsif (rising_edge(clk2)) then
+              ESTADO_ACT<=ESTADO_SIG;
+              ESTADO_ACT_M<=ESTADO_SIG_M;
           end if;
+	end process clock;
+
+
+	
+    maquina: process(ESTADO_ACT,pabierta_pcerrada,presencia,clk1,piso,actual)
+	begin
+	  case ESTADO_ACT is
+		  when PARADA=>
+        	motorpuertas<="00";
+        
+			if(pabierta_pcerrada="01" and actual=piso) then --ha llegado al piso
+				  ESTADO_SIG<=ABRIENDO; --apertura de puertas
+			  else
+				ESTADO_SIG<=PARADA; 
         end if;
-      else 
-        p_act<="001"; --si se resetea el piso por defecto es el 1
-      end if;
-     --AÑADIR LEDs y mirar asignación
+
+
+		  when ABRIENDO=>
+        	motorpuertas<="10";
+		    if(pabierta_pcerrada="10") then
+				  ESTADO_SIG<=PAUSASEGURIDAD; --ascensor ha llegado a apertura completa
+			  else
+				  ESTADO_SIG<=ABRIENDO; --ascensor sigue en movimiento
+			  end if;
+
+		  when PAUSASEGURIDAD=>
+      		motorpuertas<="00";
+			if(presencia='0' and rising_edge(clk1))then --puerta esta abierta, no hay presencia y ha pasado el tiempo de seguridad
+				ESTADO_SIG<=CERRANDO; --se cierran las puertas
+			else
+				ESTADO_SIG<=PAUSASEGURIDAD;
+			end if;
+
+		  when CERRANDO=>
+            motorpuertas<="01";
+			if(presencia='1' and pabierta_pcerrada/="01")then --está cerrando y nota presencia
+				ESTADO_SIG<=ABRIENDO;
+			elsif(pabierta_pcerrada="01") then
+				ESTADO_SIG<=PARADA;
+			else
+				ESTADO_SIG<=CERRANDO;
+			end if;
+        
       
-     end process valoracion_piso;
-   actual<=p_act;
+	end case;
+		
+ end process maquina;
+ 
+ maquinamotor:process(actual,piso,ESTADO_ACT_M)
+ 
+ 	begin
+    	case ESTADO_ACT_M is
+        	when STOP=>
+            	motor<="00";
+                if(actual< piso) then
+                	ESTADO_SIG_M<=SUBE;
+                elsif(actual>piso) then
+                	ESTADO_SIG_M<=BAJA;
+                else
+                	ESTADO_SIG_M<=STOP;
+                    
+             	end if;
+                
+           	when SUBE=>
+            	motor<="10";
+                if(actual= piso) then
+                	ESTADO_SIG_M<=STOP;
+                else
+                	ESTADO_SIG_M<=SUBE;
+                    
+             	end if;
+                
+                
+          	when BAJA=>
+            	motor<="01";
+                if(actual= piso) then
+                	ESTADO_SIG_M<=STOP;
+                else
+                	ESTADO_SIG_M<=BAJA;
+                    
+             	end if;
+                
+      	end case;
+ end process maquinamotor;
+                
 
 end Behavioral;
