@@ -2,30 +2,32 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 
-entity maquinapuertas is
+entity ascensor is
     port(
 	   motor: in std_logic_vector(1 downto 0);
 	   presencia: in std_logic; --sensor que detecta la presencia
 	   pabierta_pcerrada: in std_logic_vector(1 downto 0); --sensor detecta puerta abierta 10, o puerta cerrada 01
-     bdentro,bfuera: in std_logic_vector(3 downto 0); 
-     motorpuertas: out std_logic_vector(1 downto 0); --10=abriendo puertas, 01=cerrando puertas,00=parada de puertas
+           bdentro,bfuera: in std_logic_vector(3 downto 0); 
+           motorpuertas: out std_logic_vector(1 downto 0); --10=abriendo puertas, 01=cerrando puertas,00=parada de puertas
+	   piso:out std_logic_vector(2 downto 0);--piso al que quiero ir 
 
-	   reset:in std_logic;
+	   reset_n:in std_logic;
+	   clk:in std_logic;--reloj para determinar el piso al que quiero ir
 	   clk1:in std_logic; --reloj para pasar de estado
-	    clk2:in std_logic --reloj espera de seguridad de cerrar puertas
+	   clk2:in std_logic --reloj espera de seguridad de cerrar puertas
 );
 	
-end maquinapuertas;
+end ascensor;
 
-architecture Behavioral of maquinapuertas is
+architecture Behavioral of ascensor is
    type estados is (PARADA,ABRIENDO,CERRANDO,PAUSASEGURIDAD,ESPERABOTON);
    signal ESTADO_ACT,ESTADO_SIG: estados;
 
 begin
 
-clock: process(reset,clk1)
+clock: process(reset_n,clk1)
 	begin
-		if(reset='1') then
+		if(reset_n='1') then
 			ESTADO_ACT<=PARADA;
 		elsif (rising_edge(clk1)) then
 			ESTADO_ACT<=ESTADO_SIG;
@@ -80,5 +82,20 @@ maquina: process(ESTADO_ACT,motor,pabierta_pcerrada,presencia,bdentro,bfuera,clk
 	end case;
 		
  end process maquina;
+
+    piso_deseado:process(clk, motor)
+    begin
+        if rising_edge(clk) then
+		if (motor="00") then --solo hace caso al botón si el  motor del ascensor está parado
+		    case bdentro or bfuera is
+			when "0001" => piso<= "001";
+			when "0010" => piso<= "010";
+			when "0100" => piso<= "011";
+			when "1000" => piso<= "100";
+	         	when others => piso<= "000";
+		    end case;
+		end if;
+        end if;
+     end process piso_deseado;
 
 end Behavioral;
