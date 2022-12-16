@@ -69,10 +69,12 @@ begin
 
 		  when PAUSASEGURIDAD=>
       		motorpuertas<="00";
-			if(presencia='0' and rising_edge(clk1))then --puerta esta abierta, no hay presencia y ha pasado el tiempo de seguridad
-				ESTADO_SIG<=CERRANDO; --se cierran las puertas
+			if(rising_edge(clk1))then --puerta esta abierta, no hay presencia y ha pasado el tiempo de seguridad
+				if(presencia='0')
+					ESTADO_SIG<=CERRANDO; --se cierran las puertas
 			else
 				ESTADO_SIG<=PAUSASEGURIDAD;
+				end if;
 			end if;
 
 		  when CERRANDO=>
