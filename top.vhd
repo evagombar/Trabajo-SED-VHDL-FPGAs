@@ -7,7 +7,7 @@ use ieee.std_logic_unsigned.ALL;
 entity top is
     port ( 
     	reset_n:in std_logic;
-    	clk:in std_logic --clk general del programa
+    	clk:in std_logic; --clk general del programa
         
       	bfuera: in std_logic_vector(3 downto 0);
       	bdentro: in std_logic_vector (3 downto 0);
@@ -17,6 +17,7 @@ entity top is
 	   
        puerta_motor: out std_logic_vector (1 downto 0); --leds
        motor: inout std_logic_vector (1 downto 0);--leds (motor de ascensor)
+       led: out std_logic_vector (6 downto 0)
 
        
 	    
@@ -136,12 +137,12 @@ begin
 		PORT MAP(
           clk1=>frec1,
           clk2=>frec2,
-          reset_n=>rest_n,
+          reset_n=>reset_n,
           piso=>piso,
           actual=>pisoactual,
           presencia=>presencia,
           pabierta_pcerrada=>pabierta_pcerrada,
-          motorpuertas=>motorpuertas,
+          motorpuertas=>puerta_motor,
           motor=>motor
 		);
 		
