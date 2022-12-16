@@ -87,7 +87,7 @@ END COMPONENT;
 begin
 
 	clock1:clockdivider 
-		GENERIC MAP (frecuencia=>100000 ) --100kHz
+		GENERIC MAP (frecuencia=>10000000 ) --10MHz 
    		PORT MAP ( 
         		clock=>clk,
         		reset_n=>reset_n,
