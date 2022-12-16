@@ -34,7 +34,7 @@ architecture Structural of top is
 	signal piso:std_logic_vector (2 downto 0); --piso a donde quiero ir
 	signal pisoactual:std_logic_vector (2 downto 0); --piso en el que estoy
 	
-COMPONENT clockdivider
+COMPONENT clk_divider
     GENERIC (frecuencia: integer := 50000000 );
     PORT ( 
         clock: in std_logic;
@@ -86,7 +86,7 @@ END COMPONENT;
 	
 begin
 
-	clock1:clockdivider 
+	clock1:clk_divider 
 		GENERIC MAP (frecuencia=>10000000 ) --10MHz 
    		PORT MAP ( 
         		clock=>clk,
@@ -94,7 +94,7 @@ begin
        			 clk=>frec1
         	);
 		
-	clock2:clockdivider 
+	clock2:clk_divider 
 		GENERIC MAP (frecuencia=>150000000 ) --150MHz 150000000
    		PORT MAP ( 
         		clock=>clk,
@@ -102,7 +102,7 @@ begin
        			 clk=>frec2
         	);
 		
-	clock3:clockdivider 
+	clock3:clk_divider 
 		GENERIC MAP (frecuencia=>100000000 ) --100MHz
    		PORT MAP ( 
         		clock=>clk,
