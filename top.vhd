@@ -69,8 +69,8 @@ COMPONENT control_ascensor
         pabierta_pcerrada: in std_logic_vector(1 downto 0); --sensor detecta puerta abierta 10, o puerta cerrada 01
         
         motorpuertas: out std_logic_vector(1 downto 0); --10=abriendo puertas, 01=cerrando puertas,00=parada de puertas
-        motor: out std_logic_vector (1 downto 0); --movimiento del ascensor: "10"=subiendo, "01"=bajando, "00"=parada	
-        led:out std_logic_vector (6 downto 0) --display
+        motor: out std_logic_vector (1 downto 0) --movimiento del ascensor: "10"=subiendo, "01"=bajando, "00"=parada	
+        
 	);
 END COMPONENT;
 
