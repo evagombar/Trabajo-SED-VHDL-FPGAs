@@ -28,7 +28,7 @@ architecture tb of tb_control_ascensor is
     signal motorpuertas      : std_logic_vector (1 downto 0);
     signal motor             : std_logic_vector (1 downto 0);
 
-    constant TbPeriod1 : time := 10000 ns; -- EDIT Put right period here
+    constant TbPeriod1 : time := 100 ns; -- EDIT Put right period here
     constant TbPeriod2 : time := 6.66 ns; -- EDIT Put right period here
 
     signal TbClock1 : std_logic := '0';
@@ -54,7 +54,7 @@ begin
    TbClock2 <= not TbClock2 after TbPeriod2/2 ;
 
     -- EDIT: Check that clk1 is really your main clock signal
-    clk1 <= TbClock1;
+  clk1 <= TbClock1;
   clk2 <= TbClock2;
 
     stimuli : process
@@ -73,10 +73,19 @@ begin
         reset_n <= '1';
         wait for 100 ns;
       
-      
-
         -- EDIT Add stimuli here
-        wait for 100 * TbPeriod;
+      piso<= "100";
+      actual<="100";
+      pabierta_pcerrada <="01";
+      wait for 2 * TbPeriod2;
+      pabierta_pcerrada <="10";
+      wait for 2 * TbPeriod2;
+      presencia<='0';
+      wait for 15 * TbPeriod2;
+      pabierta_pcerrada <="00";
+      presencia<='1';
+      
+      
 
         wait;
     end process;
